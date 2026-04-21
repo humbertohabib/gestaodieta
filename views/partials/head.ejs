@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= title %> | GestaoDieta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="/">
+      <span class="brand-mark">GD</span>
+      <span>GestaoDieta</span>
+    </a>
+    <nav class="nav">
+      <% if (currentUser) { %>
+        <a href="<%= currentUser.role === 'admin' ? '/admin' : '/nutri' %>">Dashboard</a>
+        <form method="post" action="/logout">
+          <button class="icon-button" type="submit" title="Sair" aria-label="Sair">Sair</button>
+        </form>
+      <% } else { %>
+        <a href="/login">Entrar</a>
+      <% } %>
+    </nav>
+  </header>
+  <% if (flash) { %>
+    <div class="flash flash-<%= flash.type %>"><%= flash.message %></div>
+  <% } %>

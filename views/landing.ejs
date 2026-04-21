@@ -1,0 +1,55 @@
+<%- include('partials/head') %>
+
+<main class="landing-shell">
+  <section class="capture-panel">
+    <div class="copy-block">
+      <p class="eyebrow">MVP para operacao nutricional</p>
+      <h1>Capte, cobre, gere dietas e acompanhe evolucao em um unico fluxo.</h1>
+      <p class="lead-text">Landing de conversao conectada a dashboards para Admin e Nutricionista, com gerador modular pronto para receber a regra VBA traduzida.</p>
+      <div class="metric-strip">
+        <span><strong>2</strong> perfis</span>
+        <span><strong>PDF</strong> da dieta</span>
+        <span><strong>100%</strong> responsivo</span>
+      </div>
+    </div>
+
+    <form class="lead-form" action="/lead" method="post">
+      <div class="form-heading">
+        <h2>Solicitar acesso</h2>
+        <p>Preencha os dados para liberar o pagamento sandbox e entrar no funil.</p>
+      </div>
+      <label>Nome completo
+        <input name="name" required placeholder="Ex.: Ana Carvalho">
+      </label>
+      <label>E-mail
+        <input type="email" name="email" required placeholder="ana@email.com">
+      </label>
+      <label>WhatsApp
+        <input name="phone" required placeholder="(11) 90000-0000">
+      </label>
+      <label>Objetivo principal
+        <textarea name="goal" rows="3" required placeholder="Descreva objetivo, rotina, restricoes ou urgencia."></textarea>
+      </label>
+      <label>Plano
+        <select name="plan" required>
+          <% plans.forEach((plan) => { %>
+            <option value="<%= plan.name %>"><%= plan.name %> - <%= plan.price %></option>
+          <% }) %>
+        </select>
+      </label>
+      <button class="primary-action" type="submit">Continuar para pagamento</button>
+    </form>
+  </section>
+
+  <section class="plan-grid" aria-label="Planos">
+    <% plans.forEach((plan) => { %>
+      <article class="plan-card">
+        <span><%= plan.name %></span>
+        <strong><%= plan.price %></strong>
+        <p><%= plan.description %></p>
+      </article>
+    <% }) %>
+  </section>
+</main>
+
+<%- include('partials/end') %>

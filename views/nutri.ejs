@@ -1,0 +1,172 @@
+<%- include('partials/head') %>
+
+<main class="dashboard-shell">
+  <aside class="sidebar">
+    <span class="sidebar-title">Nutricionista</span>
+    <a href="#visao">Visao geral</a>
+    <a href="#gerador">Gerador</a>
+    <a href="#pacientes">Pacientes</a>
+    <a href="#metricas">Metricas</a>
+    <a href="#fotos">Fotos</a>
+  </aside>
+
+  <section class="dashboard-content">
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">Atendimento nutricional</p>
+        <h1>Painel do Nutricionista</h1>
+      </div>
+      <span class="status-pill">Gerador ativo</span>
+    </div>
+
+    <section id="visao" class="kpi-grid">
+      <article><span>Pacientes</span><strong><%= patients.length %></strong></article>
+      <article><span>Dietas geradas</span><strong><%= diets.length %></strong></article>
+      <article><span>Metricas</span><strong><%= metrics.length %></strong></article>
+      <article><span>Fotos</span><strong><%= photos.length %></strong></article>
+    </section>
+
+    <section id="gerador" class="panel">
+      <div class="section-heading">
+        <h2>Gerador de dietas</h2>
+        <span>Modulo pronto para substituir pela regra VBA</span>
+      </div>
+      <form class="form-grid" method="post" action="/nutri/dietas">
+        <label>Paciente
+          <select name="patientId" required>
+            <% patients.forEach((patient) => { %>
+              <option value="<%= patient.id %>"><%= patient.name %></option>
+            <% }) %>
+          </select>
+        </label>
+        <label>Sexo
+          <select name="sex">
+            <option value="feminino">Feminino</option>
+            <option value="masculino">Masculino</option>
+          </select>
+        </label>
+        <label>Idade
+          <input type="number" name="age" min="10" max="100" value="32" required>
+        </label>
+        <label>Peso atual (kg)
+          <input type="number" step="0.1" name="weight" value="72" required>
+        </label>
+        <label>Altura (cm)
+          <input type="number" name="height" value="168" required>
+        </label>
+        <label>Atividade
+          <select name="activity">
+            <option value="sedentario">Sedentario</option>
+            <option value="leve">Leve</option>
+            <option value="moderado" selected>Moderado</option>
+            <option value="intenso">Intenso</option>
+            <option value="atleta">Atleta</option>
+          </select>
+        </label>
+        <label>Objetivo
+          <select name="goal">
+            <option value="emagrecimento">Emagrecimento</option>
+            <option value="recomposicao">Recomposicao</option>
+            <option value="manutencao">Manutencao</option>
+            <option value="hipertrofia">Hipertrofia</option>
+          </select>
+        </label>
+        <label>Refeicoes por dia
+          <input type="number" name="mealsCount" min="3" max="7" value="5">
+        </label>
+        <button class="primary-action form-span" type="submit">Gerar dieta</button>
+      </form>
+    </section>
+
+    <section id="pacientes" class="panel two-col">
+      <div>
+        <div class="section-heading">
+          <h2>Pacientes</h2>
+          <span><%= patients.length %> cadastrados</span>
+        </div>
+        <div class="patient-list">
+          <% latestMetrics.forEach(({ patient, metric }) => { %>
+            <article>
+              <strong><%= patient.name %></strong>
+              <span><%= patient.email %></span>
+              <small><%= metric ? `${metric.weight} kg em ${new Date(metric.date).toLocaleDateString('pt-BR')}` : 'Sem metrica recente' %></small>
+            </article>
+          <% }) %>
+        </div>
+      </div>
+      <form class="stack-form" method="post" action="/nutri/pacientes">
+        <h3>Novo paciente</h3>
+        <label>Nome<input name="name" required></label>
+        <label>E-mail<input type="email" name="email" required></label>
+        <label>Telefone<input name="phone"></label>
+        <label>Nascimento<input type="date" name="birthDate"></label>
+        <label>Objetivo<input name="goal"></label>
+        <label>Restricoes<textarea name="restrictions" rows="3"></textarea></label>
+        <button class="small-action" type="submit">Cadastrar</button>
+      </form>
+    </section>
+
+    <section id="metricas" class="panel two-col">
+      <div>
+        <div class="section-heading">
+          <h2>Evolucao</h2>
+          <span>Grafico rapido por peso</span>
+        </div>
+        <div class="chart-bars" data-chart>
+          <% metrics.slice().reverse().slice(-8).forEach((metric) => { %>
+            <span style="height:<%= Math.max(14, Math.min(100, metric.weight)) %>%;" title="<%= metric.weight %> kg"></span>
+          <% }) %>
+        </div>
+      </div>
+      <form class="stack-form" method="post" action="/nutri/metricas">
+        <h3>Nova metrica</h3>
+        <label>Paciente
+          <select name="patientId">
+            <% patients.forEach((patient) => { %>
+              <option value="<%= patient.id %>"><%= patient.name %></option>
+            <% }) %>
+          </select>
+        </label>
+        <label>Data<input type="date" name="date"></label>
+        <label>Peso<input type="number" step="0.1" name="weight" required></label>
+        <label>Cintura<input type="number" step="0.1" name="waist"></label>
+        <label>Quadril<input type="number" step="0.1" name="hip"></label>
+        <label>Gordura corporal %<input type="number" step="0.1" name="bodyFat"></label>
+        <label>Observacoes<textarea name="notes" rows="3"></textarea></label>
+        <button class="small-action" type="submit">Salvar metrica</button>
+      </form>
+    </section>
+
+    <section id="fotos" class="panel two-col">
+      <div>
+        <div class="section-heading">
+          <h2>Fotos de evolucao</h2>
+          <span>Upload local no MVP</span>
+        </div>
+        <div class="photo-grid">
+          <% photos.forEach((photo) => { %>
+            <figure>
+              <img src="/uploads/<%= photo.filename %>" alt="<%= photo.caption %>">
+              <figcaption><%= photo.caption %></figcaption>
+            </figure>
+          <% }) %>
+        </div>
+      </div>
+      <form class="stack-form" method="post" action="/nutri/fotos" enctype="multipart/form-data">
+        <h3>Enviar foto</h3>
+        <label>Paciente
+          <select name="patientId">
+            <% patients.forEach((patient) => { %>
+              <option value="<%= patient.id %>"><%= patient.name %></option>
+            <% }) %>
+          </select>
+        </label>
+        <label>Legenda<input name="caption"></label>
+        <label>Arquivo<input type="file" name="photo" accept="image/*" required></label>
+        <button class="small-action" type="submit">Enviar</button>
+      </form>
+    </section>
+  </section>
+</main>
+
+<%- include('partials/end') %>

@@ -1,0 +1,28 @@
+{
+  "name": "gestaodieta",
+  "version": "1.0.0",
+  "description": "MVP web para nutricao, geracao de dietas e controle de dados.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "nutricao",
+    "dashboard",
+    "dietas",
+    "render"
+  ],
+  "author": "humbertohabib",
+  "license": "MIT",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "multer": "^2.0.0"
+  }
+}

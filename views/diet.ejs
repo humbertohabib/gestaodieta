@@ -1,0 +1,42 @@
+<%- include('partials/head') %>
+
+<main class="narrow-shell wide">
+  <section class="panel">
+    <div class="section-heading">
+      <div>
+        <p class="eyebrow">Plano alimentar</p>
+        <h1>Dieta de <%= diet.patientName %></h1>
+      </div>
+      <span class="status-pill"><%= diet.calories %> kcal</span>
+    </div>
+    <div class="macro-grid">
+      <article><span>Proteinas</span><strong><%= diet.protein %>g</strong></article>
+      <article><span>Carboidratos</span><strong><%= diet.carbs %>g</strong></article>
+      <article><span>Gorduras</span><strong><%= diet.fat %>g</strong></article>
+    </div>
+    <div class="meal-grid">
+      <% diet.meals.forEach((meal) => { %>
+        <article class="meal-card">
+          <span><%= meal.name %></span>
+          <strong><%= meal.calories %> kcal</strong>
+          <p>P <%= meal.protein %>g | C <%= meal.carbs %>g | G <%= meal.fat %>g</p>
+          <small><%= meal.foods.join(', ') %></small>
+        </article>
+      <% }) %>
+    </div>
+    <ul class="notes-list">
+      <% diet.notes.forEach((note) => { %>
+        <li><%= note %></li>
+      <% }) %>
+    </ul>
+    <div class="action-row">
+      <a class="primary-link" href="/nutri/dietas/<%= diet.id %>/pdf">Baixar PDF</a>
+      <form method="post" action="/nutri/dietas/<%= diet.id %>/enviar">
+        <button class="primary-action" type="submit">Enviar por e-mail</button>
+      </form>
+      <a class="secondary-link" href="/nutri">Voltar ao painel</a>
+    </div>
+  </section>
+</main>
+
+<%- include('partials/end') %>

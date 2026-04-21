@@ -1,0 +1,19 @@
+<%- include('partials/head') %>
+
+<main class="narrow-shell">
+  <section class="panel">
+    <p class="eyebrow">Pagamento sandbox</p>
+    <h1>Confirmar acesso de <%= lead.name %></h1>
+    <p class="lead-text">Este MVP simula o gateway para liberar o fluxo sem depender de credenciais externas. Em producao, troque esta etapa por Stripe, Mercado Pago ou Pagar.me.</p>
+    <dl class="details-list">
+      <div><dt>Plano</dt><dd><%= lead.plan %></dd></div>
+      <div><dt>E-mail</dt><dd><%= lead.email %></dd></div>
+      <div><dt>Status</dt><dd><%= lead.status %></dd></div>
+    </dl>
+    <form method="post" action="/pagamento/<%= lead.id %>/confirmar">
+      <button class="primary-action" type="submit">Simular pagamento aprovado</button>
+    </form>
+  </section>
+</main>
+
+<%- include('partials/end') %>

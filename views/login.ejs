@@ -1,0 +1,21 @@
+<%- include('partials/head') %>
+
+<main class="auth-shell">
+  <form class="login-card" method="post" action="/login">
+    <p class="eyebrow">Acesso seguro</p>
+    <h1>Entrar no sistema</h1>
+    <label>E-mail
+      <input type="email" name="email" required placeholder="admin@gestaodieta.com.br">
+    </label>
+    <label>Senha
+      <input type="password" name="password" required placeholder="admin123">
+    </label>
+    <button class="primary-action" type="submit">Entrar</button>
+    <div class="demo-access">
+      <span>Admin: admin@gestaodieta.com.br / admin123</span>
+      <span>Nutri: nutri@gestaodieta.com.br / nutri123</span>
+    </div>
+  </form>
+</main>
+
+<%- include('partials/end') %>
