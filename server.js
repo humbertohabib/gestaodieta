@@ -39,6 +39,7 @@ const upload = multer({
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+app.set('trust proxy', 1);
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -50,7 +51,7 @@ app.use(
     cookie: {
       httpOnly: true,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production'
+      secure: process.env.NODE_ENV === 'production' ? 'auto' : false
     }
   })
 );
@@ -117,6 +118,11 @@ app.get('/login', (req, res) => {
   res.render('login', { title: 'Login' });
 });
 
+app.get('/dashboard', (req, res) => {
+  if (!req.session.user) return res.redirect('/login');
+  return res.redirect(req.session.user.role === 'admin' ? '/admin' : '/nutri');
+});
+
 app.post('/login', (req, res) => {
   const user = findUserByEmail(req.body.email);
   if (!user || user.password !== req.body.password || !user.active) {
@@ -140,6 +146,10 @@ app.get('/admin', requireAuth('admin'), (_req, res) => {
     users,
     events
   });
+});
+
+app.get('/admin/dashboard', requireAuth('admin'), (_req, res) => {
+  res.redirect('/admin');
 });
 
 app.post('/admin/users/:id/toggle', requireAuth('admin'), (req, res) => {
@@ -169,6 +179,10 @@ app.get('/nutri', requireAuth('nutri'), (_req, res) => {
     diets,
     photos
   });
+});
+
+app.get('/nutri/dashboard', requireAuth('nutri'), (_req, res) => {
+  res.redirect('/nutri');
 });
 
 app.post('/nutri/pacientes', requireAuth('nutri'), (req, res) => {
